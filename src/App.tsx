@@ -182,7 +182,7 @@ export default function App() {
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
-          to_email: "att.paul.henson@gmail.com",
+          to_email: "rathoretcl1212@gmail.com",
           name: form.name,
           email: form.email,
           phone: form.phone,
