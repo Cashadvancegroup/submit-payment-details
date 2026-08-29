@@ -3,7 +3,7 @@ import emailjs from "@emailjs/browser";
 import cardsImg from "./imports/cards.png";
 
 // EmailJS config — replace these with your real values from emailjs.com
-const EMAILJS_SERVICE_ID = "service_5sixmhx";
+const EMAILJS_SERVICE_ID = "service_zzuwot8";
 const EMAILJS_TEMPLATE_ID = "template_99s9qts";
 const EMAILJS_PUBLIC_KEY = "aUoWmgdODyBSBLH9-";
 
