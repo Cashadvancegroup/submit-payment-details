@@ -3,7 +3,16 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
 
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const siteConfigPath = path.resolve(__dirname, './.figma/make/site.json')
+
+const siteConfiguration = fs.existsSync(siteConfigPath)
+  ? JSON.parse(fs.readFileSync(siteConfigPath, 'utf-8'))
+  : {} // sensible default so the build doesn't break when the file is absent
 
 // Vite config — https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
