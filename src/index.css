@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.transition-colors { background: white; }
+
+.text-red-600 {
+  margin-top: 0 !important;
+  font-size: 10px;
+}

